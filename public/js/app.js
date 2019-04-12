@@ -2404,10 +2404,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     draggable: vuedraggable__WEBPACK_IMPORTED_MODULE_0___default.a
+  },
+  // props: {
+  //     templist: Array
+  // },
+  data: function data() {
+    return {
+      templist: []
+    };
   },
   mounted: function mounted() {
     if (this.tasks.length) {
@@ -2417,9 +2433,15 @@ __webpack_require__.r(__webpack_exports__);
     this.$store.dispatch('getTasks');
   },
   methods: {
-    filt: function filt(category) {
-      return this.tasks.filter(function (task) {
-        return task.pid == category;
+    update: function update(tasks) {
+      tasks.map(function (task, index) {
+        task.order = index + 1;
+      });
+      console.log(tasks);
+      axios.post('/api/tasks/upd', tasks).then(function (response) {
+        console.log(response.data);
+      }).catch(function (error) {
+        console.log(error);
       });
     }
   },
@@ -2427,11 +2449,15 @@ __webpack_require__.r(__webpack_exports__);
     currentUser: function currentUser() {
       return this.$store.getters.currentUser;
     },
-    projects: function projects() {
-      return this.$store.getters.projects;
-    },
+    // projects() {
+    //     return this.$store.getters.projects;
+    // },
     tasks: function tasks() {
+      console.log(this.$store.getters.tasks);
       return this.$store.getters.tasks;
+    },
+    isLoading: function isLoading() {
+      return this.$store.getters.isLoading;
     }
   }
 });
@@ -43013,56 +43039,88 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    _vm._l(_vm.projects, function(project) {
-      return _c("div", { key: project.pi, staticClass: "row" }, [
-        _c(
-          "ul",
-          { staticClass: "list-group col-xs-12 col-md-6" },
-          [
-            _c("li", { staticClass: "list-group-item" }, [
-              _vm._v(_vm._s(project.pname))
-            ]),
-            _vm._v(" "),
-            _vm._m(0, true),
-            _vm._v(" "),
-            _c(
-              "draggable",
-              {
-                attrs: { group: "people" },
-                on: {
-                  start: function($event) {
-                    _vm.drag = true
-                  },
-                  end: function($event) {
-                    _vm.drag = false
-                  }
-                },
-                model: {
-                  value: _vm.myArray,
-                  callback: function($$v) {
-                    _vm.myArray = $$v
-                  },
-                  expression: "myArray"
-                }
-              },
-              _vm._l(_vm.filt(project.pid), function(task) {
-                return _c(
-                  "li",
-                  { key: task.id, staticClass: "list-group-item" },
-                  [_vm._v(_vm._s(task.name))]
-                )
-              }),
-              0
-            )
-          ],
-          1
-        )
-      ])
-    }),
-    0
-  )
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-3" }),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-xs-12 col-md-6" }, [
+      _vm.isLoading
+        ? _c(
+            "div",
+            {
+              staticClass: "spinner-border text-info",
+              attrs: { role: "status" }
+            },
+            [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+          )
+        : _c(
+            "div",
+            { staticClass: "row" },
+            _vm._l(_vm.tasks, function(project) {
+              return _c(
+                "div",
+                { key: project.pid, staticClass: "col-xs-12 col-md-12" },
+                [
+                  _c(
+                    "ul",
+                    { staticClass: "list-group" },
+                    [
+                      _c("li", { staticClass: "list-group-item" }, [
+                        _vm._v(_vm._s(project.project.pname))
+                      ]),
+                      _vm._v(" "),
+                      _vm._m(0, true),
+                      _vm._v(" "),
+                      _c(
+                        "draggable",
+                        {
+                          attrs: {
+                            list: project.tasks,
+                            group: project.project.pid
+                          },
+                          on: {
+                            start: function($event) {
+                              _vm.drag = true
+                            },
+                            end: function($event) {
+                              _vm.drag = false
+                            },
+                            update: function($event) {
+                              return _vm.update(project.tasks)
+                            }
+                          }
+                        },
+                        _vm._l(project.tasks, function(task, index) {
+                          return _c(
+                            "li",
+                            {
+                              key: task.id,
+                              staticClass: "list-group-item",
+                              attrs: { "data-id": task.id }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(task.name) +
+                                  " [" +
+                                  _vm._s(task.deadline) +
+                                  "]"
+                              )
+                            ]
+                          )
+                        }),
+                        0
+                      )
+                    ],
+                    1
+                  )
+                ]
+              )
+            }),
+            0
+          )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-md-3" })
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -43071,7 +43129,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("li", { staticClass: "list-group-item" }, [
       _c("div", { staticClass: "input-group" }, [
-        _vm._v('\n                   "+"'),
+        _vm._v('\n                        "+"'),
         _c("input", {
           staticClass: "form-control",
           attrs: {
@@ -59992,9 +60050,6 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
     },
     tasks: function tasks(state) {
       return state.tasks;
-    },
-    projects: function projects(state) {
-      return state.projects;
     }
   },
   mutations: {
@@ -60020,15 +60075,22 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
       state.isLoggedIn = false;
       state.currentUser = null;
     },
+    loading: function loading(state) {
+      state.loading = true;
+    },
+    stopLoading: function stopLoading(state) {
+      state.loading = false;
+    },
     updateCustomers: function updateCustomers(state, payload) {
       state.customers = payload;
     },
     updateTasks: function updateTasks(state, payload) {
       state.tasks = payload;
+      state.loading = false;
     },
-    updateProjects: function updateProjects(state, payload) {
-      state.projects = payload;
-    },
+    // updateProjects(state, payload) {
+    //     state.projects = payload;
+    // },
     signup: function signup(state) {
       state.loading = true;
       state.reg_error = null;
@@ -60044,7 +60106,7 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
   },
   actions: {
     login: function login(context) {
-      context.commit("login");
+      context.commit('login');
     },
     getCustomers: function getCustomers(context) {
       axios.get('/api/customers').then(function (response) {
@@ -60052,10 +60114,13 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
       });
     },
     getTasks: function getTasks(context) {
+      context.commit('loading');
       axios.get('/api/tasks').then(function (response) {
-        console.log(response.data);
-        context.commit('updateTasks', response.data.tasks);
-        context.commit('updateProjects', response.data.projects);
+        // console.log(response.data);
+        context.commit('updateTasks', response.data); // context.commit('updateProjects', response.data.projects);
+      }).catch(function (error) {
+        context.commit('stopLoading');
+        console.log(error);
       });
     },
     signup: function signup(context) {

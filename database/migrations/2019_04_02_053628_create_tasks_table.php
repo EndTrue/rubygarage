@@ -18,7 +18,7 @@ class CreateTasksTable extends Migration
             $table->string('name');
             $table->integer('project_id');
             $table->integer('status')->unsigned()->default(0);
-            $table->integer('Order')->unsigned()->default(0);
+            $table->integer('order')->unsigned()->default(0);
             $table->timestamps();
             $table->date('begin');
             $table->date('deadline');

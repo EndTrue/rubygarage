@@ -35,9 +35,9 @@ export default {
         tasks(state) {
             return state.tasks;
         },
-        projects(state) {
-            return state.projects;
-        }
+        // projects(state) {
+        //     return state.projects;
+        // }
     },
     mutations: {
         login(state) {
@@ -61,15 +61,22 @@ export default {
             state.isLoggedIn = false;
             state.currentUser = null;
         },
+        loading(state) {
+            state.loading = true;
+        },
+        stopLoading(state) {
+            state.loading = false;
+        },
         updateCustomers(state, payload) {
             state.customers = payload;
         },
         updateTasks(state, payload) {
             state.tasks = payload;
+            state.loading = false;
         },
-        updateProjects(state, payload) {
-            state.projects = payload;
-        },
+        // updateProjects(state, payload) {
+        //     state.projects = payload;
+        // },
         signup(state) {
             state.loading = true;
             state.reg_error = null;
@@ -85,7 +92,7 @@ export default {
     },
     actions: {
         login(context) {
-            context.commit("login");
+            context.commit('login');
         },
         getCustomers(context) {
             axios.get('/api/customers')
@@ -94,11 +101,16 @@ export default {
             })
         },
         getTasks(context) {
+            context.commit('loading');
             axios.get('/api/tasks')
             .then((response) => {
-                console.log(response.data);
-                context.commit('updateTasks', response.data.tasks);
-                context.commit('updateProjects', response.data.projects);
+                // console.log(response.data);
+                context.commit('updateTasks', response.data);
+                // context.commit('updateProjects', response.data.projects);
+            })
+            .catch((error) => {
+                context.commit('stopLoading');
+                console.log(error);
             })
         },
         signup(context) {

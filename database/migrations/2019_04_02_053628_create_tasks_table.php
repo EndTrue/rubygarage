@@ -17,11 +17,12 @@ class CreateTasksTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('project_id');
-            $table->integer('status')->unsigned()->default(0);
-            $table->integer('order')->unsigned()->default(0);
-            $table->timestamps();
-            $table->date('begin');
-            $table->date('deadline');
+            $table->integer('user_id');
+            $table->boolean('status')->default(0);
+            $table->integer('order')->unsigned()->default(999);
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->date('deadline')->nullable();
         });
     }
 

@@ -74,9 +74,36 @@ export default {
             state.tasks = payload;
             state.loading = false;
         },
-        // updateProjects(state, payload) {
-        //     state.projects = payload;
-        // },
+        addProject(state, payload) {
+            state.tasks.push(payload);
+        },
+        delProject(state, payload) {
+            state.tasks = state.tasks.filter(function( obj ) {
+                return obj.project.pid != payload;
+              });
+        },
+        editProject(state, payload) {
+            console.log(payload);
+        },
+        addTask(state, payload) {
+            let myArray = state.tasks;
+            let ind = myArray.map(function(e) { return e.project.pid; }).indexOf(payload.tasks['pid']);
+
+            console.log(payload.tasks['pid']);
+            console.log(ind);
+            state.tasks[ind].tasks.push(payload.tasks);
+        },
+        delTask(state, payload) {
+            let myArray = state.tasks;
+            let ind = myArray.map(function(e) { return e.project.pid; }).indexOf(payload['pid']);
+
+            console.log(payload['pid']);
+            console.log(ind);
+
+           state.tasks[ind].tasks = state.tasks[ind].tasks.filter(function( obj ) {
+                return obj.id != payload['id'];
+              });
+        },
         signup(state) {
             state.loading = true;
             state.reg_error = null;
@@ -88,6 +115,7 @@ export default {
         regFailed(state, payload) {
             state.loading = false;
             state.reg_error = payload;
+            state.auth_error = null;
         },
     },
     actions: {

@@ -28,10 +28,12 @@ Route::group(['middleware' => 'jwt.auth'], function ($router) {
     Route::post('customers/new', 'CustomersController@new');    //remove after complete
     Route::get('tasks', 'TasksController@get');                 //get all tasks for current user
     Route::post('tasks/upd', 'TasksController@update');            //add new task to project
-    // Route::post('tasks#', 'TasksController@projectupdate');      //update tasks order in project
-    // Route::post('tasks#', 'TasksController@tasktupdate');        //edit task
-    // Route::post('tasks#', 'TasksController@projectupdate');      //edit project
+    Route::post('tasks/add', 'TasksController@addTask');      //add task in project
+    Route::post('tasks/chk', 'TasksController@chkTask');      //change "check" status of task
+    Route::post('tasks/del', 'TasksController@delTask');      //delete current task Request(taskId)
+    Route::post('projects/add', 'ProjectsController@addProject');      //edit project
+    Route::post('projects/del', 'ProjectsController@delProject');
+    Route::post('projects/edit', 'ProjectsController@editProject');      //delete project
 });
-Route::group(['prefix' => 't'], function ($router) {
-    Route::get('tasks', 'TasksController@update');
-});
+
+    Route::post('tasks/edit', 'ProjectsController@editProject');

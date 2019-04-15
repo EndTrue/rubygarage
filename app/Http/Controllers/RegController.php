@@ -15,11 +15,6 @@ class RegController extends Controller
      *
      * @return void
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api', ['except' => ['login']]);
-    // }
-
     public function registration()
     {
         $credentials = request(['name', 'email', 'password', 'repassword']);

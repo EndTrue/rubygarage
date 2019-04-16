@@ -39,13 +39,12 @@
                                         <input type="checkbox" aria-label="Checkbox" v-model="task.status" @change="editCheck(task.id, task.status)">
                                     </div>
                                     <div class="mr-auto left-pad" v-bind:class="{completed: task.status}">
-                                        {{ task.name }}   
+                                        {{ task.name }}<span class="badge badge-warning ml-2" v-if="task.deadline">{{ task.deadline }}</span>
                                     </div>
                                     
                                     <div class="hide">
-                                        <span class="badge badge-warning" v-if="task.deadline">{{ task.deadline }}</span>
                                         <a href="#" class="my-handle"><i class="material-icons md-18 align-middle">unfold_more</i></a>|
-                                        <a href="#"><i class="material-icons md-18 align-middle">edit</i></a>|
+                                        <a href="#" @click="editTask(project.project.pid, task.id, task.name, task.deadline)"><i class="material-icons md-18 align-middle">edit</i></a>|
                                         <a href="#" @click="deleteTask(project.project.pid, task.id, task.name)"><i class="material-icons md-18 align-middle">delete</i></a>
                                     </div>
                                 </div>   
@@ -72,23 +71,31 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">{{ modal.title}}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="showModal = false">
+                                <h5 class="modal-title" v-html="modal.title"></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="modalReset">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p v-html="modal.text"></p>
-                                <input v-if="modal.input" v-model="modal.newPname" placeholder="New project name" required>
+                                <p v-if="modal.input && modal.button=='edit'">Project name: <input v-model="modal.newPname" class="form-control" placeholder="New project name" required></p>
+                                <p v-if="modal.input && modal.button=='editTask'">Task name: <input v-model="modal.newPname" class="form-control" placeholder="New task name" required></p>
+                                <p v-if="modal.showDate">
+                                    Task deadline: <datepicker v-model="modal.date" input-class="form-control"  placeholder="Select deadline date" format="dd-MM-yyyy"></datepicker>
+                                </p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" @click="showModal = false">Cancel</button>
-                                <button class="btn btn-primary" type="button" disabled v-if="modal.btnLoad">
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="btn btn-primary" v-if="modal.button=='delete' && !modal.btnLoad" @click="confirm">Delete</button>
-                                <button type="button" class="btn btn-primary" v-if="modal.button=='delTask' && !modal.btnLoad" @click="confirmDeleteTask">Delete Task</button>
-                                <button type="button" class="btn btn-primary" v-if="modal.button=='edit' && !modal.btnLoad" @click="confirmEdit">Edit</button>
+                                <div class="w-25">
+                                    <button type="button" class="btn btn-sm btn-secondary btn-block" @click="modalReset">Cancel</button>
+                                </div>
+                                <div class="w-25">
+                                    <button class="btn btn-sm btn-primary btn-block" type="button" disabled v-if="modal.btnLoad">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary btn-block" v-if="modal.button=='delete' && !modal.btnLoad" @click="confirmDelete">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-primary btn-block" v-if="modal.button=='delTask' && !modal.btnLoad" @click="confirmDeleteTask">Delete Task</button>
+                                    <button type="button" class="btn btn-sm btn-primary btn-block" v-if="modal.button=='edit' && !modal.btnLoad" @click="confirmEdit">Edit</button>
+                                    <button type="button" class="btn btn-sm btn-primary btn-block" v-if="modal.button=='editTask' && !modal.btnLoad" @click="confirmEditTask">Edit Task</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -103,10 +110,12 @@
 <script>
 
 import draggable from 'vuedraggable';
+import Datepicker from 'vuejs-datepicker';
 
 export default {
     components: {
-        draggable
+        draggable,
+        Datepicker
     },
     // props: {
     //     templist: Array
@@ -127,7 +136,9 @@ export default {
                 button: null,
                 btnLoad: false,
                 model: null,
-                input: false
+                input: false,
+                date: null,
+                showDate: false
             }
         }
         
@@ -166,8 +177,7 @@ export default {
             })
         },
         deleteProject(pid, pname) {
-            this.modal.title = null;
-            this.modal.text = 'Are you sure want to delete project <b>' +pname +'</b>?';
+            this.modal.title = 'Are you sure want to delete project <b>' +pname +'</b>?';
             this.modal.pid = pid;
             this.modal.button = 'delete';
             this.modal.input = false;
@@ -186,8 +196,7 @@ export default {
             })
         },
         editProject(pid, pname) {
-            this.modal.title = null;
-            this.modal.text = 'Enter new name for project <b>' +pname +'</b>?';
+            this.modal.title = 'Enter new name for project <b>' +pname +'</b>.';
             this.modal.pid = pid;
             this.modal.button = 'edit';
             this.modal.input = true;
@@ -228,8 +237,7 @@ export default {
             })
         },
         deleteTask(pid, id, name) {
-            this.modal.title = null;
-            this.modal.text = 'Are you sure want to delete task <b>' +name +'</b>?';
+            this.modal.title = 'Are you sure want to delete task <b>' +name +'</b>?';
             this.modal.pid = pid;
             this.modal.id = id;
             this.modal.button = 'delTask';
@@ -247,6 +255,46 @@ export default {
                     this.modal.btnLoad = false;
                     console.log(error);
             })
+        },
+        editTask(pid, id, name, date) {
+            this.modal.title = 'Enter new name for task <b>' +name +'</b>.';
+            this.modal.pid = pid;
+            this.modal.id = id;
+            this.modal.newPname = name;
+            this.modal.button = 'editTask';
+            this.modal.input = true;
+            this.showModal = true;
+            this.modal.showDate = true;
+            this.modal.date = date;
+        },
+        confirmEditTask() {
+            this.modal.btnLoad = true;
+            console.log(this.modal.date);
+            // axios.post('/api/tasks/edit', {'id': this.modal.pid, 'name': this.modal.newPname}
+            // ).then((response) => {
+            //     this.modal.btnLoad = false;
+            //     this.showDate = false;
+            //     console.log(response.data);
+            //     this.$store.commit('editProject', response.data);
+            //     this.showModal = false;
+            // }).catch((error) => {
+            //         this.modal.btnLoad = false;
+            //         console.log(error);
+            // })
+        },
+        modalReset() {
+            this.showModal = false;
+            this.modal.title = null;
+            this.modal.text = null;
+            this.modal.pid = null;
+            this.modal.id = null;
+            this.modal.newPname = null;
+            this.modal.button= null;
+            this.modal.btnLoad = false;
+            this.modal.model = null;
+            this.modal.input = false;
+            this.modal.date = null;
+            this.modal.showDate = false;
         }
     },
     computed: {

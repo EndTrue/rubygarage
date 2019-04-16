@@ -31,6 +31,7 @@ Route::group(['middleware' => 'jwt.auth'], function ($router) {
     Route::post('tasks/add', 'TasksController@addTask');      //add task in project
     Route::post('tasks/chk', 'TasksController@chkTask');      //change "check" status of task
     Route::post('tasks/del', 'TasksController@delTask');      //delete current task Request(taskId)
+    Route::post('tasks/edit', 'TasksController@editTask');      //edit current task Request(taskId, taskName, taskDeadline)
     Route::post('projects/add', 'ProjectsController@addProject');      //edit project
     Route::post('projects/del', 'ProjectsController@delProject');
     Route::post('projects/edit', 'ProjectsController@editProject');      //delete project

@@ -22,7 +22,7 @@ class CreateTasksTable extends Migration
             $table->integer('order')->unsigned()->default(999);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
-            $table->date('deadline')->nullable();
+            $table->timestamp('deadline')->nullable();
         });
     }
 

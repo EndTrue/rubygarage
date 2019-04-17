@@ -38,8 +38,8 @@
                                     <div class="chk-div">
                                         <input type="checkbox" aria-label="Checkbox" v-model="task.status" @change="editCheck(task.id, task.status)">
                                     </div>
-                                    <div class="mr-auto left-pad" v-bind:class="{completed: task.status}">
-                                        {{ task.name }}<span class="badge badge-warning ml-2" v-if="task.deadline">{{ task.deadline }}</span>
+                                    <div class="mr-auto pl-2" v-bind:class="{completed: task.status}">
+                                        {{ task.name }}<span class="badge badge-warning ml-2" v-if="task.deadline">{{ task.deadline.substring(0,10) }}</span>
                                     </div>
                                     
                                     <div class="hide">
@@ -61,7 +61,7 @@
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             Loading...
         </button>
-        <button class="btn btn-primary" type="button" @click="addProject" v-else>Add TODO List</button>
+        <button class="btn btn-primary mt-2" type="button" @click="addProject" v-else>Add TODO List</button>
     </div>
     <!-- MODAL -->
         <div v-if="showModal">
@@ -79,8 +79,13 @@
                             <div class="modal-body">
                                 <p v-if="modal.input && modal.button=='edit'">Project name: <input v-model="modal.newPname" class="form-control" placeholder="New project name" required></p>
                                 <p v-if="modal.input && modal.button=='editTask'">Task name: <input v-model="modal.newPname" class="form-control" placeholder="New task name" required></p>
-                                <p v-if="modal.showDate">
-                                    Task deadline: <datepicker v-model="modal.date" input-class="form-control"  placeholder="Select deadline date" format="dd-MM-yyyy"></datepicker>
+                                <p>Task deadline:</p>
+                                <p v-if="modal.showDate">                                 
+                                    <datepicker v-model="modal.date"   placeholder="Select deadline date" format="dd-MM-yyyy" :use-utc="true" :bootstrap-styling="true">
+                                        <div slot="afterDateInput" class="input-group-append">
+                                            <button class="btn btn-outline-secondary" value="Clear" @click="modal.date=null">Clear Date</button>
+                                        </div>
+                                    </datepicker>
                                 </p>
                             </div>
                             <div class="modal-footer">
@@ -270,17 +275,15 @@ export default {
         confirmEditTask() {
             this.modal.btnLoad = true;
             console.log(this.modal.date);
-            // axios.post('/api/tasks/edit', {'id': this.modal.pid, 'name': this.modal.newPname}
-            // ).then((response) => {
-            //     this.modal.btnLoad = false;
-            //     this.showDate = false;
-            //     console.log(response.data);
-            //     this.$store.commit('editProject', response.data);
-            //     this.showModal = false;
-            // }).catch((error) => {
-            //         this.modal.btnLoad = false;
-            //         console.log(error);
-            // })
+            axios.post('/api/tasks/edit', {'id': this.modal.id, 'name': this.modal.newPname, 'date': this.modal.date}
+            ).then((response) => {
+                console.log(response.data);
+                this.$store.commit('editTask', {'pid': this.modal.pid, 'id': this.modal.id, 'name': this.modal.newPname, 'date': this.modal.date});
+                this.modalReset();
+            }).catch((error) => {
+                    this.modal.btnLoad = false;
+                    console.log(error);
+            })
         },
         modalReset() {
             this.showModal = false;
@@ -319,9 +322,6 @@ export default {
 <style>
     .completed{
         text-decoration: line-through;
-    }
-    .left-pad{
-        padding-left: 1rem;
     }
     .chk-div{
         padding-right: 0.5rem;

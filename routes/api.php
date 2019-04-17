@@ -23,10 +23,7 @@ Route::group(['prefix' => 'reg'], function ($router) {
     Route::post('registration', 'RegController@registration');
 });
 Route::group(['middleware' => 'jwt.auth'], function ($router) {
-    Route::get('customers', 'CustomersController@all');         //remove after complete
-    Route::get('customers/{id}', 'CustomersController@get');    //remove after complete
-    Route::post('customers/new', 'CustomersController@new');    //remove after complete
-    Route::get('tasks', 'TasksController@get');                 //get all tasks for current user
+    Route::post('tasks', 'TasksController@get');                 //get all tasks for current user
     Route::post('tasks/upd', 'TasksController@update');            //add new task to project
     Route::post('tasks/add', 'TasksController@addTask');      //add task in project
     Route::post('tasks/chk', 'TasksController@chkTask');      //change "check" status of task
@@ -36,5 +33,3 @@ Route::group(['middleware' => 'jwt.auth'], function ($router) {
     Route::post('projects/del', 'ProjectsController@delProject');
     Route::post('projects/edit', 'ProjectsController@editProject');      //delete project
 });
-
-    Route::post('tasks/edit', 'ProjectsController@editProject');

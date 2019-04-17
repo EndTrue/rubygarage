@@ -2492,6 +2492,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2676,18 +2681,29 @@ __webpack_require__.r(__webpack_exports__);
       this.modal.date = date;
     },
     confirmEditTask: function confirmEditTask() {
+      var _this6 = this;
+
       this.modal.btnLoad = true;
-      console.log(this.modal.date); // axios.post('/api/tasks/edit', {'id': this.modal.pid, 'name': this.modal.newPname}
-      // ).then((response) => {
-      //     this.modal.btnLoad = false;
-      //     this.showDate = false;
-      //     console.log(response.data);
-      //     this.$store.commit('editProject', response.data);
-      //     this.showModal = false;
-      // }).catch((error) => {
-      //         this.modal.btnLoad = false;
-      //         console.log(error);
-      // })
+      console.log(this.modal.date);
+      axios.post('/api/tasks/edit', {
+        'id': this.modal.id,
+        'name': this.modal.newPname,
+        'date': this.modal.date
+      }).then(function (response) {
+        console.log(response.data);
+
+        _this6.$store.commit('editTask', {
+          'pid': _this6.modal.pid,
+          'id': _this6.modal.id,
+          'name': _this6.modal.newPname,
+          'date': _this6.modal.date
+        });
+
+        _this6.modalReset();
+      }).catch(function (error) {
+        _this6.modal.btnLoad = false;
+        console.log(error);
+      });
     },
     modalReset: function modalReset() {
       this.showModal = false;
@@ -7237,7 +7253,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.completed{\n    text-decoration: line-through;\n}\n.left-pad{\n    padding-left: 1rem;\n}\n.chk-div{\n    padding-right: 0.5rem;\n    border-right: 4px double #ccc;\n}\n.list-group-item{\n    padding: 0 0.75rem;\n}\n.my-handle {\n    cursor: move;\n    cursor: -webkit-grabbing;\n}\n.listhead {\n    background-image: linear-gradient(#5082BC, #385F9A);\n    margin-top: 1rem;\n    padding: 0.2rem;\n}\n.listedit {\n    background-image: linear-gradient(#E5E4E4, #C6C6C6);\n    padding: 0.2rem;\n}\n.btn-success{\n    background-image: linear-gradient(#90BEA5, #658973);\n    border: #5a7a66;\n}\n.calendar{\n    text-shadow: 0px 0.4px 2px rgb(65, 147, 255);\n    color: #424242;\n    transition: all 1s;\n}\n.plusic{\n    font-weight: bold;\n    color: #658973;\n    padding-top: 2px;\n}\n.modal-mask {\n    position: fixed;\n    z-index: 9998;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background-color: rgba(0, 0, 0, .5);\n    display: table;\n    transition: opacity .3s ease;\n}\n.modal-wrapper {\n    display: table-cell;\n    vertical-align: middle;\n}\n.remote-link{\n    color: #ccc;\n}\n.remote-link:hover{\n    color: #fff;\n}\n#list .hide{\nvisibility: hidden;\n}\n#list:hover .hide{\n    visibility: visible;\n}\n", ""]);
+exports.push([module.i, "\n.completed{\n    text-decoration: line-through;\n}\n.chk-div{\n    padding-right: 0.5rem;\n    border-right: 4px double #ccc;\n}\n.list-group-item{\n    padding: 0 0.75rem;\n}\n.my-handle {\n    cursor: move;\n    cursor: -webkit-grabbing;\n}\n.listhead {\n    background-image: linear-gradient(#5082BC, #385F9A);\n    margin-top: 1rem;\n    padding: 0.2rem;\n}\n.listedit {\n    background-image: linear-gradient(#E5E4E4, #C6C6C6);\n    padding: 0.2rem;\n}\n.btn-success{\n    background-image: linear-gradient(#90BEA5, #658973);\n    border: #5a7a66;\n}\n.calendar{\n    text-shadow: 0px 0.4px 2px rgb(65, 147, 255);\n    color: #424242;\n    transition: all 1s;\n}\n.plusic{\n    font-weight: bold;\n    color: #658973;\n    padding-top: 2px;\n}\n.modal-mask {\n    position: fixed;\n    z-index: 9998;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background-color: rgba(0, 0, 0, .5);\n    display: table;\n    transition: opacity .3s ease;\n}\n.modal-wrapper {\n    display: table-cell;\n    vertical-align: middle;\n}\n.remote-link{\n    color: #ccc;\n}\n.remote-link:hover{\n    color: #fff;\n}\n#list .hide{\nvisibility: hidden;\n}\n#list:hover .hide{\n    visibility: visible;\n}\n", ""]);
 
 // exports
 
@@ -43646,7 +43662,7 @@ var render = function() {
                                     _c(
                                       "div",
                                       {
-                                        staticClass: "mr-auto left-pad",
+                                        staticClass: "mr-auto pl-2",
                                         class: { completed: task.status }
                                       },
                                       [
@@ -43661,7 +43677,16 @@ var render = function() {
                                                 staticClass:
                                                   "badge badge-warning ml-2"
                                               },
-                                              [_vm._v(_vm._s(task.deadline))]
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    task.deadline.substring(
+                                                      0,
+                                                      10
+                                                    )
+                                                  )
+                                                )
+                                              ]
                                             )
                                           : _vm._e()
                                       ]
@@ -43780,7 +43805,7 @@ var render = function() {
         : _c(
             "button",
             {
-              staticClass: "btn btn-primary",
+              staticClass: "btn btn-primary mt-2",
               attrs: { type: "button" },
               on: { click: _vm.addProject }
             },
@@ -43897,27 +43922,56 @@ var render = function() {
                               ])
                             : _vm._e(),
                           _vm._v(" "),
+                          _c("p", [_vm._v("Task deadline:")]),
+                          _vm._v(" "),
                           _vm.modal.showDate
                             ? _c(
                                 "p",
                                 [
-                                  _vm._v(
-                                    "\n                                Task deadline: "
-                                  ),
-                                  _c("datepicker", {
-                                    attrs: {
-                                      "input-class": "form-control",
-                                      placeholder: "Select deadline date",
-                                      format: "dd-MM-yyyy"
-                                    },
-                                    model: {
-                                      value: _vm.modal.date,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.modal, "date", $$v)
+                                  _c(
+                                    "datepicker",
+                                    {
+                                      attrs: {
+                                        placeholder: "Select deadline date",
+                                        format: "dd-MM-yyyy",
+                                        "use-utc": true,
+                                        "bootstrap-styling": true
                                       },
-                                      expression: "modal.date"
-                                    }
-                                  })
+                                      model: {
+                                        value: _vm.modal.date,
+                                        callback: function($$v) {
+                                          _vm.$set(_vm.modal, "date", $$v)
+                                        },
+                                        expression: "modal.date"
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass: "input-group-append",
+                                          attrs: { slot: "afterDateInput" },
+                                          slot: "afterDateInput"
+                                        },
+                                        [
+                                          _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn btn-outline-secondary",
+                                              attrs: { value: "Clear" },
+                                              on: {
+                                                click: function($event) {
+                                                  _vm.modal.date = null
+                                                }
+                                              }
+                                            },
+                                            [_vm._v("Clear Date")]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
                                 ],
                                 1
                               )
@@ -62505,6 +62559,27 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
         return obj.id != payload['id'];
       });
     },
+    editTask: function editTask(state, payload) {
+      // return index of task's project
+      var myArray = state.tasks;
+      var projInd = myArray.map(function (e) {
+        return e.project.pid;
+      }).indexOf(payload['pid']); // return index of task in project
+
+      console.log(payload);
+      console.log(state.tasks[projInd]);
+      var taskInd = state.tasks[projInd].tasks.map(function (e) {
+        return e.id;
+      }).indexOf(payload['id']);
+      var newArray = state.tasks[projInd].tasks[taskInd];
+      newArray.name = payload.name;
+
+      if (payload.date) {
+        newArray.deadline = payload.date.toString();
+      } else {
+        newArray.deadline = null;
+      }
+    },
     signup: function signup(state) {
       state.loading = true;
       state.reg_error = null;
@@ -62530,7 +62605,7 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
     },
     getTasks: function getTasks(context) {
       context.commit('loading');
-      axios.get('/api/tasks').then(function (response) {
+      axios.post('/api/tasks').then(function (response) {
         // console.log(response.data);
         context.commit('updateTasks', response.data); // context.commit('updateProjects', response.data.projects);
       }).catch(function (error) {

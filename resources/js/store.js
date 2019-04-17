@@ -104,6 +104,22 @@ export default {
                 return obj.id != payload['id'];
               });
         },
+        editTask(state, payload) {
+            // return index of task's project
+            let myArray = state.tasks;
+            let projInd = myArray.map(function(e) { return e.project.pid; }).indexOf(payload['pid']);
+            // return index of task in project
+            console.log(payload);
+            console.log(state.tasks[projInd]);
+            let taskInd = state.tasks[projInd].tasks.map(function(e) { return e.id; }).indexOf(payload['id']);
+            let newArray = state.tasks[projInd].tasks[taskInd];
+            newArray.name = payload.name;
+            if (payload.date){
+                newArray.deadline = payload.date.toString();
+            } else {
+                newArray.deadline = null;
+            }
+        },
         signup(state) {
             state.loading = true;
             state.reg_error = null;
@@ -130,7 +146,7 @@ export default {
         },
         getTasks(context) {
             context.commit('loading');
-            axios.get('/api/tasks')
+            axios.post('/api/tasks')
             .then((response) => {
                 // console.log(response.data);
                 context.commit('updateTasks', response.data);

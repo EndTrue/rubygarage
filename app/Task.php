@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
 
 class Task extends Model
 {
@@ -16,7 +18,14 @@ class Task extends Model
         return $this->belongsTo('App\Project');
     }
 
-    protected $dates = [
-        'deadline'
-    ];
+    // protected $dates = [
+    //     'deadline'
+    // ];
+
+    public function getDeadlineAttribute($data)
+    {
+        if ($data != null){
+            return Carbon::create($data);
+        }        
+    }
 }

@@ -9,7 +9,6 @@ export default {
         loading: false,
         auth_error: null,
         reg_error: null,
-        customers: [],
         tasks: [],
         projects: []
     },
@@ -90,10 +89,9 @@ export default {
         addTask(state, payload) {
             let myArray = state.tasks;
             let ind = myArray.map(function(e) { return e.project.pid; }).indexOf(payload.tasks['pid']);
-
-            console.log(payload.tasks['pid']);
-            console.log(ind);
-            state.tasks[ind].tasks.push(payload.tasks);
+            
+                state.tasks[ind].tasks.push(payload.tasks);
+                console.log('this state');
         },
         delTask(state, payload) {
             let myArray = state.tasks;

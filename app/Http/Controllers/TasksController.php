@@ -58,7 +58,13 @@ class TasksController extends Controller
         $task->deadline = $date;
         $task->save();
         
-        return response()->json([$date], 200);
+        $data = collect([
+            'pid' => $task->project_id,
+            'id' => $task->id,
+            'name' => $task->name,
+            'date' => $task->deadline
+        ]);
+        return response()->json($data, 200);
     }
     public function delTask(Request $request) {
         $where = [

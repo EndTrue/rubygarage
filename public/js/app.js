@@ -2712,12 +2712,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         console.log(response.data);
 
-        _this6.$store.commit('editTask', {
-          'pid': _this6.modal.pid,
-          'id': _this6.modal.id,
-          'name': _this6.modal.newPname,
-          'date': _this6.modal.date
-        });
+        _this6.$store.commit('editTask', response.data);
 
         _this6.modalReset();
       }).catch(function (error) {
@@ -7217,7 +7212,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nhtml{\n    height: 100%;\n    background-image: url(" + escape(__webpack_require__(/*! ../../bg.jpg */ "./resources/bg.jpg")) + "); background-repeat: no-repeat; background-size: 100% 100%; background-position: center center;\n}\n", ""]);
+exports.push([module.i, "\nhtml{\n    height: 100%;\n    background-image: url(" + escape(__webpack_require__(/*! ../../bg.jpg */ "./resources/bg.jpg")) + "); background-repeat: no-repeat; background-size: 100% 100%;\n    background-attachment: fixed;\n}\n", ""]);
 
 // exports
 
@@ -42448,140 +42443,134 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "nav",
-    { staticClass: "navbar navbar-expand-md navbar-light navbar-laravel" },
-    [
-      _c(
-        "div",
-        { staticClass: "container" },
-        [
-          _c(
-            "router-link",
-            { staticClass: "navbar-brand", attrs: { to: "/" } },
-            [_vm._v("Ruby Garage ToDo List")]
-          ),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "collapse navbar-collapse",
-              attrs: { id: "navbarSupportedContent" }
-            },
-            [
-              _c(
-                "ul",
-                { staticClass: "navbar-nav ml-auto" },
-                [
-                  !_vm.currentUser
-                    ? [
-                        _c(
-                          "li",
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                staticClass: "nav-link",
-                                attrs: { to: "/login" }
-                              },
-                              [_vm._v("Login")]
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "li",
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                staticClass: "nav-link",
-                                attrs: { to: "/signup" }
-                              },
-                              [_vm._v("Sign Up")]
-                            )
-                          ],
-                          1
-                        )
-                      ]
-                    : [
-                        _c(
-                          "li",
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                staticClass: "nav-link",
-                                attrs: { to: "/tasks" }
-                              },
-                              [_vm._v("Tasks")]
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c("li", { staticClass: "nav-item dropdown" }, [
+  return _c("nav", { staticClass: "navbar navbar-expand-md navbar-light" }, [
+    _c(
+      "div",
+      { staticClass: "container" },
+      [
+        _c("router-link", { staticClass: "navbar-brand", attrs: { to: "/" } }, [
+          _vm._v("Ruby Garage ToDo List")
+        ]),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse navbar-collapse",
+            attrs: { id: "navbarSupportedContent" }
+          },
+          [
+            _c(
+              "ul",
+              { staticClass: "navbar-nav ml-auto" },
+              [
+                !_vm.currentUser
+                  ? [
+                      _c(
+                        "li",
+                        [
                           _c(
-                            "a",
+                            "router-link",
                             {
-                              staticClass: "nav-link dropdown-toggle",
-                              attrs: {
-                                id: "navbarDropdown",
-                                href: "#",
-                                role: "button",
-                                "data-toggle": "dropdown",
-                                "aria-expanded": "false",
-                                "aria-haspopup": "true"
-                              }
+                              staticClass: "nav-link",
+                              attrs: { to: "/login" }
                             },
-                            [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(_vm.currentUser.name) +
-                                  " "
-                              ),
-                              _c("span", { staticClass: "caret" })
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass: "dropdown-menu",
-                              attrs: { "aria-labelledby": "navbarDropdown" }
-                            },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "dropdown-item",
-                                  attrs: { href: "#!" },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.logout($event)
-                                    }
-                                  }
-                                },
-                                [_vm._v("Logout")]
-                              )
-                            ]
+                            [_vm._v("Login")]
                           )
-                        ])
-                      ]
-                ],
-                2
-              )
-            ]
-          )
-        ],
-        1
-      )
-    ]
-  )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "li",
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "nav-link",
+                              attrs: { to: "/signup" }
+                            },
+                            [_vm._v("Sign Up")]
+                          )
+                        ],
+                        1
+                      )
+                    ]
+                  : [
+                      _c(
+                        "li",
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "nav-link",
+                              attrs: { to: "/tasks" }
+                            },
+                            [_vm._v("Tasks")]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "nav-item dropdown" }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "nav-link dropdown-toggle",
+                            attrs: {
+                              id: "navbarDropdown",
+                              href: "#",
+                              role: "button",
+                              "data-toggle": "dropdown",
+                              "aria-expanded": "false",
+                              "aria-haspopup": "true"
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(_vm.currentUser.name) +
+                                " "
+                            ),
+                            _c("span", { staticClass: "caret" })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "dropdown-menu",
+                            attrs: { "aria-labelledby": "navbarDropdown" }
+                          },
+                          [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "dropdown-item",
+                                attrs: { href: "#!" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.logout($event)
+                                  }
+                                }
+                              },
+                              [_vm._v("Logout")]
+                            )
+                          ]
+                        )
+                      ])
+                    ]
+              ],
+              2
+            )
+          ]
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -43558,7 +43547,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "text-center" }, [
+  return _c("div", { staticClass: "container" }, [
     _vm._m(0),
     _vm._v(" "),
     _vm._m(1),
@@ -43782,7 +43771,7 @@ var render = function() {
                             return _c(
                               "li",
                               {
-                                key: task.id,
+                                key: index,
                                 staticClass:
                                   "list-group-item list-group-item-action",
                                 attrs: { "data-id": task.id, id: "list" }
@@ -62751,7 +62740,6 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
     loading: false,
     auth_error: null,
     reg_error: null,
-    customers: [],
     tasks: [],
     projects: []
   },
@@ -62834,9 +62822,8 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
       var ind = myArray.map(function (e) {
         return e.project.pid;
       }).indexOf(payload.tasks['pid']);
-      console.log(payload.tasks['pid']);
-      console.log(ind);
       state.tasks[ind].tasks.push(payload.tasks);
+      console.log('this state');
     },
     delTask: function delTask(state, payload) {
       var myArray = state.tasks;

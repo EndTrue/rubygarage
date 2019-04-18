@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+    <nav class="navbar navbar-expand-md navbar-light">
         <div class="container">
             <router-link class="navbar-brand" to="/">Ruby Garage ToDo List</router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,7 @@
 <style>
         html{
             height: 100%;
-            background-image: url('../../bg.jpg'); background-repeat: no-repeat; background-size: 100% 100%; background-position: center center;
+            background-image: url('../../bg.jpg'); background-repeat: no-repeat; background-size: 100% 100%;
+            background-attachment: fixed;
         }
 </style>

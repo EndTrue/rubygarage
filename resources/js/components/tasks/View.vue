@@ -1,5 +1,5 @@
 <template>
-    <div class="text-center">
+    <div class="container">
 
     <div class="row mt-3">
         <div class="col col-md-6 mx-auto">
@@ -45,7 +45,7 @@
                         </li>
                         <!-- Draggable cycle  -->
                         <draggable :list="project.tasks" :group="project.project.pid" @start="drag=true" @end="drag=false" @update="update(project.tasks)" handle=".my-handle">
-                            <li v-for="(task, index) in project.tasks" :key="task.id" :data-id="task.id" class="list-group-item list-group-item-action" id="list">
+                            <li v-for="(task, index) in project.tasks" :key="index" :data-id="task.id" class="list-group-item list-group-item-action" id="list">
                                 <div class="d-flex justify-content-between">
                                     <div class="chk-div">
                                         <input type="checkbox" aria-label="Checkbox" v-model="task.status" @change="editCheck(task.id, task.status)">
@@ -295,7 +295,7 @@ export default {
             axios.post('/api/tasks/edit', {'id': this.modal.id, 'name': this.modal.newPname, 'date': this.modal.date}
             ).then((response) => {
                 console.log(response.data);
-                this.$store.commit('editTask', {'pid': this.modal.pid, 'id': this.modal.id, 'name': this.modal.newPname, 'date': this.modal.date});
+                this.$store.commit('editTask', response.data);
                 this.modalReset();
             }).catch((error) => {
                     this.modal.btnLoad = false;

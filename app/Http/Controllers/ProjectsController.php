@@ -18,7 +18,8 @@ class ProjectsController extends Controller
         $data = collect([
             'project' => collect([
                 'pid'   => $project->id,
-                'pname' => $project->name])
+                'pname' => $project->name]),
+            'tasks' => []
             ]);
 
         return response()->json($data, 200);

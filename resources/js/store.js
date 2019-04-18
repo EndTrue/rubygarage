@@ -83,7 +83,9 @@ export default {
               });
         },
         editProject(state, payload) {
-            console.log(payload);
+            let myArray = state.tasks;
+            let ind = myArray.map(function(e) { return e.project.pid; }).indexOf(payload.pid);
+            state.tasks[ind].project['pname'] = payload.pname;
         },
         addTask(state, payload) {
             let myArray = state.tasks;

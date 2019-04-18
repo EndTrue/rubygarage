@@ -32,27 +32,6 @@ export const routes = [
         }
     },
     {
-        path: '/customers',
-        component: CustomersMain,
-        meta: {
-            requiresAuth: true
-        },
-        children: [
-            {
-                path: '/',
-                component: CustomersList
-            },
-            {
-                path: 'new',
-                component: NewCustomer
-            },
-            {
-                path: ':id',
-                component: Customer
-            }
-        ]
-    },
-    {
         path: '*',
         component: Notfound
     }

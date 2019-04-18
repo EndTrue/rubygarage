@@ -1,7 +1,19 @@
 <template>
     <div class="text-center">
+
+    <div class="row mt-3">
+        <div class="col col-md-6 mx-auto">
+            <h1><b>Simple TODO List</b></h1>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col col-md-6 mx-auto">
+            <p>FROM RUBY GARAGE</p>
+        </div>
+    </div>
+
     <div class="row"> 
-        <div class="col-xs-12 col-md-6 mx-auto"> 
+        <div class="col-md-6 mx-auto"> 
             <div class="spinner-border text-info" role="status" v-if="isLoading">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -13,7 +25,7 @@
                                 <i class="material-icons md-18 align-middle calendar">calendar_today</i>
                                 <i style="color: #fff;" class="align-middle">{{ project.project.pname }}</i>
                             </div>
-                            <div class="float-right" style="color: #fff;">
+                            <div class="float-right" style="color: #ccc;">
                                 <a href="#" @click="editProject(project.project.pid, project.project.pname)" class="remote-link"><i class="material-icons md-18 align-middle" style="font-size:16px;">create</i></a>
                                 <span class="align-middle">|</span> 
                                 <a href="#" @click="deleteProject(project.project.pid, project.project.pname)" class="remote-link"><i class="material-icons md-18 align-middle" style="font-size:16px;">delete</i></a>
@@ -23,7 +35,7 @@
                         <li class="list-group-item listedit">
                             <form v-on:submit.prevent>
                             <div class="input-group input-group-sm">
-                            <i class="material-icons md-18 plusic">add</i>
+                            <i class="material-icons md-18 plusic mx-1">add</i>
                             <input type="text" class="form-control" placeholder="Add new task name" required v-model="tempmodel[index]">
                                 <div class="input-group-append">
                                     <button class="btn btn-success btn-sm" type="submit" @click="addTask(index, project.project.pid, project.project.pname)">Add Task</button>
@@ -39,7 +51,7 @@
                                         <input type="checkbox" aria-label="Checkbox" v-model="task.status" @change="editCheck(task.id, task.status)">
                                     </div>
                                     <div class="mr-auto pl-2" v-bind:class="{completed: task.status}">
-                                        {{ task.name }}<span class="badge badge-warning ml-2" v-if="task.deadline">{{ task.deadline.substring(0,10) }}</span>
+                                        {{ task.name }}<span class="badge badge-warning ml-2 align-middle" v-if="task.deadline">{{ task.deadline.substring(0,10) }}</span>
                                     </div>
                                     
                                     <div class="hide">
@@ -56,12 +68,17 @@
             </div>       
         </div>        
     </div>
-    <div class="text-center">
-        <button class="btn btn-primary" type="button" disabled v-if="buttonLoad">
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Loading...
-        </button>
-        <button class="btn btn-primary mt-2" type="button" @click="addProject" v-else>Add TODO List</button>
+    <div class="row mt-3">
+        <div class="col col-md-3 mx-auto">
+            <button class="btn btn-primary btn-add btn-block" type="button" disabled v-if="buttonLoad">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </button>
+            <button class="btn btn-primary btn-add btn-block justify-content-center align-content-between" type="button" @click="addProject" v-else><i class="material-icons plusadd">add</i><span>Add TODO List</span></button>
+        </div>
+    </div>
+    <div class="text-center mt-3" style="color: #fff">
+        &copy; Ruby Garage
     </div>
     <!-- MODAL -->
         <div v-if="showModal">
@@ -79,7 +96,7 @@
                             <div class="modal-body">
                                 <p v-if="modal.input && modal.button=='edit'">Project name: <input v-model="modal.newPname" class="form-control" placeholder="New project name" required></p>
                                 <p v-if="modal.input && modal.button=='editTask'">Task name: <input v-model="modal.newPname" class="form-control" placeholder="New task name" required></p>
-                                <p>Task deadline:</p>
+                                <p v-if="modal.showDate">Task deadline:</p>
                                 <p v-if="modal.showDate">                                 
                                     <datepicker v-model="modal.date"   placeholder="Select deadline date" format="dd-MM-yyyy" :use-utc="true" :bootstrap-styling="true">
                                         <div slot="afterDateInput" class="input-group-append">
@@ -215,8 +232,8 @@ export default {
             ).then((response) => {
                 this.modal.btnLoad = false;
                 console.log(response.data);
-                this.$store.commit('editProject', response.data);
-                this.showModal = false;
+                this.$store.commit('editProject', {'pid': this.modal.pid, 'pname': this.modal.newPname});
+                this.modalReset();
             }).catch((error) => {
                     this.modal.btnLoad = false;
                     console.log(error);
@@ -320,6 +337,11 @@ export default {
 </script>
 
 <style>
+    button i.material-icons {
+        vertical-align: middle;
+        padding-right: 5px;
+        border-right: 0px groove;
+    }
     .completed{
         text-decoration: line-through;
     }
@@ -330,6 +352,14 @@ export default {
     .list-group-item{
         padding: 0 0.75rem;
     } 
+    .list-group-item:first-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .list-group-item:last-child {
+        border-bottom-left-radius: 0.75rem;
+        border-bottom-right-radius: 0.75rem;
+    }
     .my-handle {
         cursor: move;
         cursor: -webkit-grabbing;
@@ -347,6 +377,11 @@ export default {
         background-image: linear-gradient(#90BEA5, #658973);
         border: #5a7a66;
     }
+    .btn-add{
+        background-image: linear-gradient(#517EBD, #3A609C);
+        border: rgb(48, 82, 138);
+        font-weight: bold;
+    }
     .calendar{
         text-shadow: 0px 0.4px 2px rgb(65, 147, 255);
         color: #424242;
@@ -356,6 +391,19 @@ export default {
         font-weight: bold;
         color: #658973;
         padding-top: 2px;
+        
+    }
+    .plusadd{
+        font-weight: bold;
+        color: #31496F;
+         text-shadow: 0px 1px 2px #31496F;
+         text-shadow: 0px -1px 2px #31496F;
+         text-shadow: 1px 0px 2px #31496F;
+         text-shadow: -1px 0px 2px #31496F;
+         text-shadow: 0px 2px 2px #557bb9;
+         text-shadow: 0px -2px 2px #557bb9;
+         text-shadow: 2px 0px 2px #557bb9;
+         text-shadow: -2px 0px 2px #557bb9;
     }
     .modal-mask {
         position: fixed;

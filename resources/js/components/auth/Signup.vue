@@ -27,11 +27,11 @@
                         <label for="inputPassword" class="sr-only">Confirm Password</label>
                         <input type="password" id="inputRePassword" class="form-control" placeholder="Confirm Password" required  v-model="form.repassword">
                     </div>
-                    <button class="btn btn-primary btn-block" type="button" disabled v-if="isLoading">
+                    <button class="btn btn-primary btn-block  btn-add" type="button" disabled v-if="isLoading">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             Loading...
                         </button>
-                        <button class="btn btn-primary btn-block" type="submit" v-else>Sign Up</button>
+                        <button class="btn btn-primary btn-block btn-add" type="submit" v-else>Sign Up</button>
                     
                     <div class="alert alert-warning" v-if="regError">
                             <ul>
@@ -96,3 +96,11 @@
         }
     }
 </script>
+
+<style>
+    .btn-add{
+        background-image: linear-gradient(#517EBD, #3A609C);
+        border: rgb(48, 82, 138);
+        font-weight: bold;
+    }
+</style>

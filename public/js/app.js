@@ -2317,6 +2317,8 @@ __webpack_require__.r(__webpack_exports__);
         console.log(response.data);
 
         _this4.$store.commit('addTask', response.data);
+
+        _this4.tempmodel[index] = null;
       }).catch(function (error) {
         console.log(error);
       });

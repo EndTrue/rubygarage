@@ -245,6 +245,7 @@ export default {
             ).then((response) => {
                 console.log(response.data);
                 this.$store.commit('addTask', response.data);
+                this.tempmodel[index] = null;
             }).catch((error) => {
                     console.log(error);
             })

@@ -33,7 +33,7 @@
                         </button>
                         <button class="btn btn-primary btn-block btn-add" type="submit" v-else>Sign Up</button>
                     
-                    <div class="alert alert-warning" v-if="regError">
+                    <div class="alert alert-warning mt-3" v-if="regError">
                             <ul>
                                 <li v-for="value in validationErrors">{{ value }}</li>
                             </ul>

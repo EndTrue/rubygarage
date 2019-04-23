@@ -1,4 +1,4 @@
-Demo: [a link](http://ruby.devlab.pp.ua)
+Demo: [Demo](http://ruby.devlab.pp.ua)
 
 Install:
 

@@ -8,4 +8,4 @@ Install:
     5. configure DB and app nameg in .env config file;
     6. run "php artisan key:generate";
     7. run "php artisan jwt:secret;
-    8. run "php artisan migrate.
+    8. run "php artisan migrate".
